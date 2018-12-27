@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- TODO Layout basics
+         Be sure to familiarize yourself with these layout options
+         Feel free to play around with them.
+         Here are some questions you should be able to answer. Please include
+         brief answers when you commit your changes:
+         1. What is the difference between wrap_content and match_parent?
+         2. What is the difference between padding and margins?
+         3. What units are appropriate for dimensions?
+         4. Where can you go to edit the default values of the text and color?
+         5. What are general rules for ID names? -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/default_value"
+        android:textSize="30sp"
+        android:textColor="@color/colorPrimary"
+        android:textAlignment="textEnd"
+        android:id="@+id/calcMainTextView"
+        />
+
+    <!-- TODO Grouping layouts and parameters
+         Can you group these two layouts together so the margin between the text view
+         and the buttons is bigger?
+         If so, what layout parameters in the two layouts are now redundant? -->
+    <RelativeLayout
+        android:layout_width="240dp"
+        android:layout_below="@id/calcMainTextView"
+        android:layout_height="250dp"
+        android:id="@+id/numberButtonHolder">
+
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/miscButtonGroup"
+            android:layout_alignParentBottom="true"
+            >
+
+            <!-- TODO Programatically implement these
+                 The zero button should act like any other number button, with
+                 one exception (can you think of a case?)
+                 The plus/minus button should toggle the sign of the current number
+                 The decimal button should add a decimal to the current number, except
+                 when there already is a decimal, of course. -->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/zero_label"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/plus_minus_label"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/decimal_label"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/numberButtonHolder"
+        android:layout_below="@id/calcMainTextView"
+        android:layout_alignParentEnd="true">
+
+        <!-- TODO UX Design
+             Can you change these buttons into different colors? How about the Team 25 blue?
+             What can you do to improve the aesthetics of the app?
+             What here doesn't follow good development practices?-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/plus_label"
+            android:id="@+id/addButton"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addButton"
+            android:text="x"
+
+            android:id="@+id/multiplyButton"/>
+
+        <!-- TODO Implementing new buttons/views
+             Please implement subtraction and division layout buttons here
+             If you're feeling ambitious, do one for square root as well! -->
+
+    </RelativeLayout>
+
+    <!-- TODO Bringing everything together
+         Can you implement an enter button so results can be displayed without
+          pressing another operation button?
+          How about an all clear button or a backspace button? -->
+
+
+</RelativeLayout>
