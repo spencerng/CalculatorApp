@@ -11,7 +11,12 @@
         android:theme="@style/AppTheme"
         >
         <activity android:name=".MainActivity">
-            <!--TODO This application won't launch right now. What's missing? -->
+            <!--DONE This application won't launch right now. What's missing? -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

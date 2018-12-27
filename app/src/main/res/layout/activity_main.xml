@@ -36,7 +36,7 @@
     <RelativeLayout
         android:layout_width="240dp"
         android:layout_below="@id/calcMainTextView"
-        android:layout_height="250dp"
+        android:layout_height="193dp"
         android:id="@+id/numberButtonHolder">
 
         <LinearLayout

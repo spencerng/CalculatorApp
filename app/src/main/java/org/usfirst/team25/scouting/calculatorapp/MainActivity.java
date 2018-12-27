@@ -51,46 +51,57 @@ public class MainActivity extends AppCompatActivity {
         // TODO Add two more number groups for the numbers 4-9 (inclusive)
         // There's an easy way to do this, without copying the code two more times!
 
-        // A set of three number buttons
-        LinearLayout numButtonGroup = new LinearLayout(getApplicationContext());
 
-        // Programatically setting the layout parameters (analogous to XML ones) here
-        RelativeLayout.LayoutParams buttonGroupParams =
-                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        buttonGroupParams.addRule(RelativeLayout.ABOVE, R.id.miscButtonGroup);
-        numButtonGroup.setLayoutParams(buttonGroupParams);
+        int prevId = R.id.miscButtonGroup;
 
-        //How would this help with laying out additional button groups?
-        int currentId = ViewGroup.generateViewId();
-        numButtonGroup.setId(currentId);
+        for(int j = 0; j < 3; j++) {
+            // A set of three number buttons
+            LinearLayout numButtonGroup = new LinearLayout(getApplicationContext());
 
-        for(int i = 1; i<=3; i++){
-            final Button numButton = new Button(getApplicationContext());
-            numButton.setText(Integer.toString(i));
+            // Programatically setting the layout parameters (analogous to XML ones) here
+            RelativeLayout.LayoutParams buttonGroupParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            buttonGroupParams.addRule(RelativeLayout.ABOVE, prevId);
+            numButtonGroup.setLayoutParams(buttonGroupParams);
 
-            // TODO Can you ensure the three buttons have equal widths?
-            // This might require a bit of research on layout parameters...
+            //How would this help with laying out additional button groups?
+            int currentId = ViewGroup.generateViewId();
+            numButtonGroup.setId(currentId);
 
 
-            // This is what triggers an action upon clicking a view
-            // OnClickListeners are very important!
-            numButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(inputNewNum)
-                        mainDisplay.setText(numButton.getText());
-                    else {
-                        String currentNum = (String) mainDisplay.getText();
-                        String newNum = currentNum + numButton.getText();
-                        mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
+            for (int i = 1; i <= 3; i++) {
+                final Button numButton = new Button(getApplicationContext());
+                numButton.setText(Integer.toString(i + j * 3));
+
+                // DONE Can you ensure the three buttons have equal widths?
+                // This might require a bit of research on layout parameters...
+                LinearLayout.LayoutParams buttomParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+                numButton.setLayoutParams(buttomParams);
+
+
+                // This is what triggers an action upon clicking a view
+                // OnClickListeners are very important!
+                numButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (inputNewNum)
+                            mainDisplay.setText(numButton.getText());
+                        else {
+                            String currentNum = (String) mainDisplay.getText();
+                            String newNum = currentNum + numButton.getText();
+                            mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
+                        }
                     }
-                }
-            });
+                });
 
-            numButtonGroup.addView(numButton);
+                numButtonGroup.addView(numButton);
+            }
+
+            prevId = currentId;
+            numButtonHolder.addView(numButtonGroup);
         }
 
-        numButtonHolder.addView(numButtonGroup);
+
 
         // Toasts are one among many ways to easily display feedback to users
         mainDisplay.setOnClickListener(new View.OnClickListener() {
