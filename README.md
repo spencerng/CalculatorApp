@@ -49,3 +49,9 @@ git push origin master
 ```
 
 That's it! Good luck!
+
+-------------------------------
+
+Here's a screenshot of what your finished app *could* look like:
+
+<img src="screenshot.png" width="300">
