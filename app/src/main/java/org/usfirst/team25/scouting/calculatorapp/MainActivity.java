@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MULTIPLICATION:
                 result = previousNumber * currentNum;
-                updatePastCalc(formatNumber(previousNumber, 3) + " X " + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
+                updatePastCalc(formatNumber(previousNumber, 3) + " × " + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
                 break;
             case SUBTRACTION:
                 result = previousNumber - currentNum;
