@@ -105,7 +105,10 @@
     <!-- TODO Bringing everything together
          Can you implement an enter button so results can be displayed without
           pressing another operation button?
-          How about an all clear button or a backspace button? -->
+          Other ideas include: a back or undo button, an all clear button, a display of
+          past calculations, a memory button, etc.
+          It's your app, so feel free to place these buttons where you'd like - just follow
+          material design guidelines! -->
 
 
 </RelativeLayout>
