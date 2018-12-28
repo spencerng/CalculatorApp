@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private double previousNumber;
 
     // Determines if a second number needs to be inputted (e.g. after an operation is pressed)
-    private boolean inputNewNum = false;
+    private boolean inputNewNum;
 
     // Enumerates the different operations so they don't need to be defined by a literal int or string
     enum Operation {
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         previousNumber = Double.parseDouble(getString(R.string.default_value));
+        inputNewNum = true;
 
         // Need to link IDs defined in XML to programmatic variables
         // Note that the R(esource) class is automatically generated

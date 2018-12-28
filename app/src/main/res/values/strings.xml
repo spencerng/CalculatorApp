@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">Calculator App</string>
-    <string name="default_value">25</string>
+    <string name="default_value">0</string>
     <string name="plus_minus_label">+/-</string>
     <string name="zero_label">0</string>
     <string name="decimal_label">.</string>
     <string name="plus_label">+</string>
+    <string name="minus_label">-</string>
+    <string name="times_label">×</string>
+    <string name="divide_label">÷</string>
+    <string name="clear_label">AC</string>
+    <string name="enter_label">=</string>
+    <string name="square_root_label">√</string>
+    <string name="back_label">←</string>
+    <string name="prev_calc_string">Previous Calculations:</string>
 </resources>
