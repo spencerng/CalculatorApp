@@ -11,24 +11,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
 
 
     // Some variables accessed by all methods in this class
-    private Operation currentOperation = null;
-    private TextView mainDisplay;
+    private Operation currentOperation;
+    private TextView mainDisplay, pastCalcDisplay;
     private RelativeLayout numButtonHolder;
+
+    String[] pastCalculations;
 
 
     // The first number when completing a computation
     private double previousNumber;
 
     // Determines if a second number needs to be inputted (e.g. after an operation is pressed)
-    private boolean inputNewNum;
+    private boolean inputNewNum, numberChanged;
 
     // Enumerates the different operations so they don't need to be defined by a literal int or string
     enum Operation {
-        ADDITION, MULTIPLICATION
+        ADDITION, MULTIPLICATION, DIVISION, SQUARE_ROOT, SUBTRACTION
     }
 
     // Our "main" method of the activity. It's called when the activity is first created
@@ -39,17 +43,31 @@ public class MainActivity extends AppCompatActivity {
 
         previousNumber = Double.parseDouble(getString(R.string.default_value));
         inputNewNum = true;
+        numberChanged = false;
+        currentOperation = null;
+        pastCalculations = new String[8];
 
         // Need to link IDs defined in XML to programmatic variables
         // Note that the R(esource) class is automatically generated
         mainDisplay = findViewById(R.id.calcMainTextView);
         numButtonHolder = findViewById(R.id.numberButtonHolder);
+        pastCalcDisplay = findViewById(R.id.pastCalcTextView);
+        Button zeroButton = findViewById(R.id.zeroButton);
+        Button plusMinusButton = findViewById(R.id.plusMinusButton);
+        Button decimalButton = findViewById(R.id.decimalButton);
+        Button clearButton = findViewById(R.id.clearButton);
+        Button backButton = findViewById(R.id.backButton);
+        Button equalsButtonn = findViewById(R.id.equalsButton);
+
+
+
 
         // Creating an array instead of separate variables here makes it easier to perform common functions
-        Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton)};
+        Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton),
+                findViewById(R.id.subtractButton), findViewById(R.id.divideButton), findViewById(R.id.sqrtButton)};
 
 
-        // TODO Add two more number groups for the numbers 4-9 (inclusive)
+        // DONE Add two more number groups for the numbers 4-9 (inclusive)
         // There's an easy way to do this, without copying the code two more times!
 
 
@@ -85,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 numButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        numberChanged = true;
                         if (inputNewNum)
                             mainDisplay.setText(numButton.getText());
                         else {
@@ -92,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                             String newNum = currentNum + numButton.getText();
                             mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
                         }
+                        inputNewNum = false;
                     }
                 });
 
@@ -112,25 +132,115 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        zeroButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                numberChanged = true;
+                if (inputNewNum)
+                    mainDisplay.setText("0");
+                else {
+                    String currentNum = (String) mainDisplay.getText();
+                    String newNum = currentNum + "0";
+                    mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
+                }
+                inputNewNum = false;
+            }
+        });
+
+        plusMinusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainDisplay.setText(formatNumber(-Double.parseDouble((String)mainDisplay.getText())));
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                previousNumber = 0;
+                inputNewNum = true;
+                numberChanged = false;
+                currentOperation = null;
+                mainDisplay.setText("0");
+            }
+        });
+
+        decimalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double currentValue = Double.parseDouble((String)mainDisplay.getText());
+                if((int)currentValue == currentValue) {
+                    String newText;
+                    if(inputNewNum)
+                        newText = "0.";
+                    else newText = Integer.toString((int)currentValue) + ".";
+                    mainDisplay.setText(newText);
+                    inputNewNum = false;
+                    numberChanged = true;
+                }
+            }
+        });
+
+        equalsButtonn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(currentOperation != null && numberChanged)
+                    executeCalculation();
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double currentNum = Double.parseDouble((String)mainDisplay.getText());
+                if((int) currentNum == currentNum && Math.abs(currentNum) < 10){
+                    mainDisplay.setText("0");
+                    inputNewNum = true;
+                }
+                else if(!inputNewNum){
+                    String displayText = (String) mainDisplay.getText();
+                    mainDisplay.setText(displayText.substring(0, displayText.length()-1));
+
+                }
+            }
+        });
+
         for(final Button operationButton : operationButtons){
             operationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(currentOperation != null)
-                        executeCalculation();
+                    if(operationButton.getText().equals(getString(R.string.square_root_label))){
+                        currentOperation = Operation.SQUARE_ROOT;
+                        if(!((String)mainDisplay.getText()).contains("-")) {
+                            executeCalculation();
 
-                    // We use casework here and in the implementation of executeCalculation()
-                    // because the functions are essentially the same aside from the operation
-                    if(operationButton.getText().equals(getString(R.string.plus_label))){
-                        currentOperation = Operation.ADDITION;
-                    }
-                    else if(operationButton.getText().equals("x")){
-                        currentOperation = Operation.MULTIPLICATION;
+                        }
+                        else Toast.makeText(getApplicationContext(), "Can't take the square root of a negative number!", Toast.LENGTH_SHORT).show();
                     }
 
-                    inputNewNum = true;
+                    else{
+                        if(currentOperation != null && numberChanged)
+                            executeCalculation();
+                        else previousNumber = Double.parseDouble((String)mainDisplay.getText());;
 
-                    // TODO There's a slight bug here when "chaining" operations. Can you fix it?
+                        // We use casework here and in the implementation of executeCalculation()
+                        // because the functions are essentially the same aside from the operation
+                        if(operationButton.getText().equals(getString(R.string.plus_label))){
+                            currentOperation = Operation.ADDITION;
+                        }
+                        else if(operationButton.getText().equals(getString(R.string.times_label))){
+                            currentOperation = Operation.MULTIPLICATION;
+                        }
+                        else if(operationButton.getText().equals(getString(R.string.divide_label))){
+                            currentOperation = Operation.DIVISION;
+                        }
+                        else if(operationButton.getText().equals(getString(R.string.minus_label))){
+                            currentOperation = Operation.SUBTRACTION;
+                        }
+                        inputNewNum = true;
+                    }
+
+                    //  DONE There's a slight bug here when "chaining" operations. Can you fix it?
 
                 }
             });
@@ -146,19 +256,49 @@ public class MainActivity extends AppCompatActivity {
         switch (currentOperation){
             case ADDITION:
                 result = previousNumber + currentNum;
+                updatePastCalc(formatNumber(previousNumber, 3) + " + " + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
                 break;
             case MULTIPLICATION:
                 result = previousNumber * currentNum;
+                updatePastCalc(formatNumber(previousNumber, 3) + " X " + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
                 break;
+            case SUBTRACTION:
+                result = previousNumber - currentNum;
+                updatePastCalc(formatNumber(previousNumber, 3) + " - " + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
+                break;
+            case DIVISION:
+                result = previousNumber / currentNum;
+                updatePastCalc(formatNumber(previousNumber, 3) + " ÷ " + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
+                break;
+            case SQUARE_ROOT:
+                result = Math.sqrt(currentNum);
+                updatePastCalc("√" + formatNumber(currentNum, 3) + " = " + formatNumber(result, 3));
         }
 
         mainDisplay.setText(formatNumber(result));
-
+        currentOperation = null;
         previousNumber = result;
+        numberChanged = false;
+
 
     }
 
-    // TODO Implement this as you see fit
+    void updatePastCalc(String currentCalc){
+        String disp = getString(R.string.prev_calc_string) + "\n";
+
+        for(int i = pastCalculations.length - 1; i > 0; i--)
+            pastCalculations[i] = pastCalculations[i-1];
+
+        pastCalculations[0] = currentCalc;
+
+        for(String calc : pastCalculations)
+            if(calc!=null)
+                disp += calc + "\n";
+
+        pastCalcDisplay.setText(disp);
+    }
+
+    // DONE Implement this as you see fit
     /** Formats numbers into scientific notation or truncates them
      *  if they are too long, removes leading zeroes, unnecessary decimal places, etc.
      * @param num
@@ -169,5 +309,14 @@ public class MainActivity extends AppCompatActivity {
             return Integer.toString((int)num);
         return Double.toString(num);
     }
+    String formatNumber(double num, int precision){
+        if((int)num == num)
+            return Integer.toString((int)num);
+        String pattern = "0.";
+        for(int i = 0; i < precision; i++)
+            pattern += "#";
+        return new DecimalFormat(pattern).format(num);
+    }
+
 
 }

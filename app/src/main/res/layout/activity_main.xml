@@ -186,7 +186,9 @@
         android:text="@string/prev_calc_string"
         android:textSize="18sp"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/pastCalcTextView"
+        android:textAlignment="center"/>
 
     <!-- DONE Bringing everything together
          Can you implement an enter button so results can be displayed without
