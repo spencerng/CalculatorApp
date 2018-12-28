@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         mainDisplay = findViewById(R.id.calcMainTextView);
         numButtonHolder = findViewById(R.id.numberButtonHolder);
 
+
+        // TODO Note that you'll need to modify this to implement the other operations
         // Creating an array instead of separate variables here makes it easier to perform common functions
         Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton)};
 
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         buttonGroupParams.addRule(RelativeLayout.ABOVE, R.id.miscButtonGroup);
         numButtonGroup.setLayoutParams(buttonGroupParams);
 
-        //How would this help with laying out additional button groups?
+        // TODO How would this help with laying out additional button groups?
         int currentId = ViewGroup.generateViewId();
         numButtonGroup.setId(currentId);
 
@@ -84,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
                         String newNum = currentNum + numButton.getText();
                         mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
                     }
+
+                    // Lets the entire class know that a second number has been inputted
+                    inputNewNum = false;
                 }
             });
 
@@ -119,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     inputNewNum = true;
 
                     // TODO There's a slight bug here when "chaining" operations. Can you fix it?
+                    // It might help to modify where inputNewNum and currentOperation are set/used...
 
                 }
             });
@@ -143,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
         mainDisplay.setText(formatNumber(result));
 
         previousNumber = result;
+
+        // TODO You might have to add something here to fix the chaining bug mentioned before
 
     }
 
