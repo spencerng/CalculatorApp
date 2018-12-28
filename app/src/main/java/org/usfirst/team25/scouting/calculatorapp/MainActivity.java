@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private double previousNumber;
 
     // Determines if a second number needs to be inputted (e.g. after an operation is pressed)
-    private boolean inputNewNum, numberChanged;
+    private boolean inputNewNum;
 
     // Enumerates the different operations so they don't need to be defined by a literal int or string
     enum Operation {
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         previousNumber = Double.parseDouble(getString(R.string.default_value));
         inputNewNum = true;
-        numberChanged = false;
         currentOperation = null;
         pastCalculations = new String[8];
 
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 numButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        numberChanged = true;
+
                         if (inputNewNum)
                             mainDisplay.setText(numButton.getText());
                         else {
@@ -135,13 +134,13 @@ public class MainActivity extends AppCompatActivity {
         zeroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                numberChanged = true;
+
                 if (inputNewNum)
                     mainDisplay.setText("0");
                 else {
                     String currentNum = (String) mainDisplay.getText();
                     String newNum = currentNum + "0";
-                    mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
+                    mainDisplay.setText(newNum);
                 }
                 inputNewNum = false;
             }
@@ -159,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 previousNumber = 0;
                 inputNewNum = true;
-                numberChanged = false;
                 currentOperation = null;
                 mainDisplay.setText("0");
             }
@@ -169,14 +167,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double currentValue = Double.parseDouble((String)mainDisplay.getText());
-                if((int)currentValue == currentValue) {
+                if((int)currentValue == currentValue || inputNewNum) {
                     String newText;
                     if(inputNewNum)
                         newText = "0.";
                     else newText = Integer.toString((int)currentValue) + ".";
                     mainDisplay.setText(newText);
                     inputNewNum = false;
-                    numberChanged = true;
                 }
             }
         });
@@ -184,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         equalsButtonn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentOperation != null && numberChanged)
+                if(currentOperation != null && !inputNewNum)
                     executeCalculation();
             }
         });
@@ -219,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     else{
-                        if(currentOperation != null && numberChanged)
+                        if(currentOperation != null && !inputNewNum)
                             executeCalculation();
                         else previousNumber = Double.parseDouble((String)mainDisplay.getText());;
 
@@ -278,8 +275,8 @@ public class MainActivity extends AppCompatActivity {
         mainDisplay.setText(formatNumber(result));
         currentOperation = null;
         previousNumber = result;
-        numberChanged = false;
 
+        inputNewNum = true;
 
     }
 
