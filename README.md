@@ -10,6 +10,9 @@ This tutorial repository was written for FRC Team 25, Raider Robotix, and a more
 * Basic knowledge of XML 
 * Understanding of how Android app source files are structured
 * Debugging skills
+* [Android Studio](https://developer.android.com/studio/) with API level 24+
+* [Git](https://git-scm.com/)
+* Your own GitHub account
 
 **Goals**
 
