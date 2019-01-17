@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        previousNumber = Double.parseDouble(getString(R.string.default_value));
+        previousNumber = Double.parseDouble("25");
 
         // Need to link IDs defined in XML to programmatic variables
         // Note that the R(esource) class is automatically generated
@@ -105,30 +105,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        for(final Button operationButton : operationButtons){
-            operationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(currentOperation != null)
-                        executeCalculation();
 
-                    // We use casework here and in the implementation of executeCalculation()
-                    // because the functions are essentially the same aside from the operation
-                    if(operationButton.getText().equals(getString(R.string.plus_label))){
-                        currentOperation = Operation.ADDITION;
+            for (final Button operationButton : operationButtons) {
+                operationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (currentOperation != null)
+                            if (inputNewNum == false) {
+                                executeCalculation();
+                            }
+
+
+
+                        // We use casework here and in the implementation of executeCalculation()
+                        // because the functions are essentially the same aside from the operation
+                        if (operationButton.getText().equals(getString(R.string.plus_label))) {
+                            currentOperation = Operation.ADDITION;
+                        } else if (operationButton.getText().equals("x")) {
+                            currentOperation = Operation.MULTIPLICATION;
+                        }
+                        inputNewNum = true;
+
+
+                        // TODO There's a slight bug here when "chaining" operations. Can you fix it?
+                        // It might help to modify where inputNewNum and currentOperation are set/used...
+
                     }
-                    else if(operationButton.getText().equals("x")){
-                        currentOperation = Operation.MULTIPLICATION;
-                    }
+                });
+            }
 
-                    inputNewNum = true;
-
-                    // TODO There's a slight bug here when "chaining" operations. Can you fix it?
-                    // It might help to modify where inputNewNum and currentOperation are set/used...
-
-                }
-            });
-        }
     }
 
     /** Takes the previous number, selected operation, and current number to compute/display the result
@@ -137,14 +142,17 @@ public class MainActivity extends AppCompatActivity {
         double currentNum = Double.parseDouble((String) mainDisplay.getText());
         double result = 0;
 
-        switch (currentOperation){
-            case ADDITION:
-                result = previousNumber + currentNum;
-                break;
-            case MULTIPLICATION:
-                result = previousNumber * currentNum;
-                break;
-        }
+
+            switch (currentOperation){
+                case ADDITION:
+                    result = previousNumber + currentNum;
+                    break;
+                case MULTIPLICATION:
+                    result = previousNumber * currentNum;
+                    break;
+            }
+
+
 
         mainDisplay.setText(formatNumber(result));
 
@@ -155,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO Implement this as you see fit
-    /** Formats numbers into scientific notation or truncates them
+    /** Formats numbers into scientific nota    ```tion or truncates them
      *  if they are too long, removes leading zeroes, unnecessary decimal places, etc.
      * @param num
      * @return num formatted as a readable and parsable string
