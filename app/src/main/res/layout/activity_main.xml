@@ -36,11 +36,11 @@
     <RelativeLayout
         android:layout_width="240dp"
         android:layout_below="@id/calcMainTextView"
-        android:layout_height="250dp"
+        android:layout_height="240dp"
         android:id="@+id/numberButtonHolder">
 
         <LinearLayout
-            android:layout_width="240dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:id="@+id/miscButtonGroup"
             android:layout_alignParentBottom="true"
@@ -56,17 +56,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/zero_label"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:id="@+id/zeroButton"
+                />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/plus_minus_label"/>
+                android:text="@string/plus_minus_label"
+                android:id="@+id/positiveNegativeButton"
+                />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/decimal_label"/>
+                android:text="@string/decimal_label"
+                android:id="@+id/periodButton"
+                />
         </LinearLayout>
     </RelativeLayout>
 
@@ -108,6 +114,14 @@
             android:layout_below="@id/multiplyButton"
             android:text="/"
             android:id="@+id/divideButton"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divideButton"
+            android:id="@+id/clearButton"
+            android:text="C"
             />
 
 
