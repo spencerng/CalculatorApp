@@ -92,9 +92,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/addButton"
+            android:text="-"
+            android:id="@+id/subtractButton"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subtractButton"
             android:text="x"
+            android:id="@+id/multiplyButton"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/multiplyButton"
+            android:text="/"
+            android:id="@+id/divideButton"
+            />
 
-            android:id="@+id/multiplyButton"/>
 
         <!-- TODO Implementing new buttons/views
              Please implement subtraction and division layout buttons here
