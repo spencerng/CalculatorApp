@@ -124,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
 
                         if((currentOperation != null) && !(inputNewNum))
                             executeCalculation();
+                        if(currentOperation == Operation.CLEAR) {
+                            executeCalculation();
+                        }
+                        else if ((currentOperation != null) && (inputNewNum)) {
+                            Toast.makeText(getApplicationContext(), "Please input a number", Toast.LENGTH_SHORT).show();
+                        }
 
 
                         // We use casework here and in the implementation of executeCalculation()
@@ -137,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             currentOperation = Operation.SUBTRACTION;
                         } else if (operationButton.getText().equals("/")) {
                             currentOperation = Operation.DIVISION;
-                        } else if (operationButton.getText().equals("C")) {
+                        } else if ((operationButton.getText().equals("C"))) {
                             currentOperation = Operation.CLEAR;
                         }
 
