@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        previousNumber = Double.parseDouble((String) mainDisplay.getText());
+        previousNumber = 0.0;
 
         // Need to link IDs defined in XML to programmatic variables
         // Note that the R(esource) class is automatically generated
