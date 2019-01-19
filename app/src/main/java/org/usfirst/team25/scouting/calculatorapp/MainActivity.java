@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Enumerates the different operations so they don't need to be defined by a literal int or string
     enum Operation {
-        ADDITION, MULTIPLICATION
+        ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, CLEAR
     }
 
     // Our "main" method of the activity. It's called when the activity is first created
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        previousNumber = Double.parseDouble("25");
+        previousNumber = Double.parseDouble((String) mainDisplay.getText());
 
         // Need to link IDs defined in XML to programmatic variables
         // Note that the R(esource) class is automatically generated
@@ -47,13 +47,12 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO Note that you'll need to modify this to implement the other operations
         // Creating an array instead of separate variables here makes it easier to perform common functions
-        Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton)};
+        Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton), findViewById(R.id.subtractButton), findViewById(R.id.divideButton)};
 
 
         // TODO Add two more number groups for the numbers 4-9 (inclusive)
-        // There's an easy way to do this, without copying the code two more times!
 
-        // A set of three number buttons
+        // A set of three groups of 3 number buttons
         LinearLayout numButtonGroup = new LinearLayout(getApplicationContext());
 
         // Programatically setting the layout parameters (analogous to XML ones) here
@@ -62,11 +61,10 @@ public class MainActivity extends AppCompatActivity {
         buttonGroupParams.addRule(RelativeLayout.ABOVE, R.id.miscButtonGroup);
         numButtonGroup.setLayoutParams(buttonGroupParams);
 
-        // TODO How would this help with laying out additional button groups?
         int currentId = ViewGroup.generateViewId();
         numButtonGroup.setId(currentId);
 
-        for(int i = 1; i<=3; i++){
+        for(int i = 1; i<=3; i++) {
             final Button numButton = new Button(getApplicationContext());
             numButton.setText(Integer.toString(i));
 
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             numButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(inputNewNum)
+                    if (inputNewNum)
                         mainDisplay.setText(numButton.getText());
                     else {
                         String currentNum = (String) mainDisplay.getText();
@@ -93,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
             });
 
             numButtonGroup.addView(numButton);
+
+
+            numButtonHolder.addView(numButtonGroup);
         }
-
-        numButtonHolder.addView(numButtonGroup);
-
         // Toasts are one among many ways to easily display feedback to users
         mainDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,10 +108,9 @@ public class MainActivity extends AppCompatActivity {
                 operationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (currentOperation != null)
-                            if (inputNewNum == false) {
-                                executeCalculation();
-                            }
+                        if ((currentOperation != null) && !(inputNewNum)) {
+                            executeCalculation();
+                        }
 
 
 
@@ -123,12 +120,15 @@ public class MainActivity extends AppCompatActivity {
                             currentOperation = Operation.ADDITION;
                         } else if (operationButton.getText().equals("x")) {
                             currentOperation = Operation.MULTIPLICATION;
+                        } else if (operationButton.getText().equals("-")) {
+                        currentOperation = Operation.SUBTRACTION;
+                        } else if (operationButton.getText().equals("/")) {
+                            currentOperation = Operation.DIVISION;
+                        } else if (operationButton.getText().equals("C")) {
+                            currentOperation = Operation.CLEAR;
                         }
+
                         inputNewNum = true;
-
-
-                        // TODO There's a slight bug here when "chaining" operations. Can you fix it?
-                        // It might help to modify where inputNewNum and currentOperation are set/used...
 
                     }
                 });
@@ -150,7 +150,17 @@ public class MainActivity extends AppCompatActivity {
                 case MULTIPLICATION:
                     result = previousNumber * currentNum;
                     break;
+                case SUBTRACTION:
+                    result = previousNumber - currentNum;
+                    break;
+                case DIVISION:
+                    result = previousNumber / currentNum;
+                    break;
+                case CLEAR:
+                    result = Double.parseDouble("0");
+                    break;
             }
+
 
 
 
@@ -158,12 +168,10 @@ public class MainActivity extends AppCompatActivity {
 
         previousNumber = result;
 
-        // TODO You might have to add something here to fix the chaining bug mentioned before
-
     }
 
     // TODO Implement this as you see fit
-    /** Formats numbers into scientific nota    ```tion or truncates them
+    /** Formats numbers into scientific notation or truncates them
      *  if they are too long, removes leading zeroes, unnecessary decimal places, etc.
      * @param num
      * @return num formatted as a readable and parsable string
