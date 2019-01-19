@@ -57,24 +57,23 @@ public class MainActivity extends AppCompatActivity {
         // TODO Add two more number groups for the numbers 4-9 (inclusive)
 
         // A set of three number buttons
-        int currentId;
+        int currentId = R.id.miscButtonGroup;
         int z = 1;
         for (int y = 1; y <= 3; y++) {
             LinearLayout numButtonGroup = new LinearLayout(getApplicationContext());
-
-            currentId = ViewGroup.generateViewId();
-            numButtonGroup.setId(currentId);
             RelativeLayout.LayoutParams buttonGroupParams =
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             if(y == 1) {
                 buttonGroupParams.addRule(RelativeLayout.ABOVE, R.id.miscButtonGroup);
+
             }
             else {
-
                 buttonGroupParams.addRule(RelativeLayout.ABOVE, currentId);
-            }
 
+            }
+            currentId = ViewGroup.generateViewId();
+            numButtonGroup.setId(currentId);
 
             numButtonGroup.setLayoutParams(buttonGroupParams);
 
