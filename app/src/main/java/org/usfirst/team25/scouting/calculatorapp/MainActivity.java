@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Enumerates the different operations so they don't need to be defined by a literal int or string
     enum Operation {
-        ADDITION, MULTIPLICATION
+        ADDITION, MULTIPLICATION, SUBTRACTION, DIVISION, CLEAR
     }
 
     // Our "main" method of the activity. It's called when the activity is first created
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        previousNumber = Double.parseDouble("25");
+        previousNumber = Double.parseDouble("0");
 
         // Need to link IDs defined in XML to programmatic variables
         // Note that the R(esource) class is automatically generated
@@ -47,92 +47,104 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO Note that you'll need to modify this to implement the other operations
         // Creating an array instead of separate variables here makes it easier to perform common functions
-        Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton)};
+        Button[] operationButtons = {findViewById(R.id.addButton), findViewById(R.id.multiplyButton), findViewById(R.id.subtractButton), findViewById(R.id.divideButton), findViewById(R.id.clearButton)};
 
 
         // TODO Add two more number groups for the numbers 4-9 (inclusive)
         // There's an easy way to do this, without copying the code two more times!
 
         // A set of three number buttons
-        LinearLayout numButtonGroup = new LinearLayout(getApplicationContext());
+        int currentId;
+        int z = 1;
+        for (int y = 1; y <= 3; y++) {
+            LinearLayout numButtonGroup = new LinearLayout(getApplicationContext());
 
-        // Programatically setting the layout parameters (analogous to XML ones) here
-        RelativeLayout.LayoutParams buttonGroupParams =
-                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        buttonGroupParams.addRule(RelativeLayout.ABOVE, R.id.miscButtonGroup);
-        numButtonGroup.setLayoutParams(buttonGroupParams);
+            currentId = ViewGroup.generateViewId();
+            numButtonGroup.setId(currentId);
+            RelativeLayout.LayoutParams buttonGroupParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        // TODO How would this help with laying out additional button groups?
-        int currentId = ViewGroup.generateViewId();
-        numButtonGroup.setId(currentId);
+            if(y == 1) {
+                buttonGroupParams.addRule(RelativeLayout.ABOVE, R.id.miscButtonGroup);
+            }
+            else {
 
-        for(int i = 1; i<=3; i++){
-            final Button numButton = new Button(getApplicationContext());
-            numButton.setText(Integer.toString(i));
+                buttonGroupParams.addRule(RelativeLayout.ABOVE, currentId);
+            }
 
-            // TODO Can you ensure the three buttons have equal widths?
-            // This might require a bit of research on layout parameters...
+            numButtonGroup.setLayoutParams(buttonGroupParams);
 
 
-            // This is what triggers an action upon clicking a view
-            // OnClickListeners are very important!
-            numButton.setOnClickListener(new View.OnClickListener() {
+            for(int i = 1; i<=3; i++){
+                final Button numButton = new Button(getApplicationContext());
+                numButton.setText(Integer.toString(z));
+                z += 1;
+
+                // TODO Can you ensure the three buttons have equal widths?
+                // This might require a bit of research on layout parameters...
+
+
+                // This is what triggers an action upon clicking a view
+                // OnClickListeners are very important!
+                numButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(inputNewNum)
+                            mainDisplay.setText(numButton.getText());
+                        else {
+                            String currentNum = (String) mainDisplay.getText();
+                            String newNum = currentNum + numButton.getText();
+                            mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
+                        }
+
+                        // Lets the entire class know that a second number has been inputted
+                        inputNewNum = false;
+                    }
+                });
+
+                numButtonGroup.addView(numButton);
+            }
+
+            numButtonHolder.addView(numButtonGroup);
+
+            // Toasts are one among many ways to easily display feedback to users
+            mainDisplay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(inputNewNum)
-                        mainDisplay.setText(numButton.getText());
-                    else {
-                        String currentNum = (String) mainDisplay.getText();
-                        String newNum = currentNum + numButton.getText();
-                        mainDisplay.setText(formatNumber(Double.parseDouble(newNum)));
-                    }
-
-                    // Lets the entire class know that a second number has been inputted
-                    inputNewNum = false;
+                    Toast.makeText(getApplicationContext(), "Text isn't directly editable!", Toast.LENGTH_SHORT).show();
                 }
             });
 
-            numButtonGroup.addView(numButton);
-        }
-
-        numButtonHolder.addView(numButtonGroup);
-
-        // Toasts are one among many ways to easily display feedback to users
-        mainDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Text isn't directly editable!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-            for (final Button operationButton : operationButtons) {
+            for(final Button operationButton : operationButtons){
                 operationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (currentOperation != null)
-                            if (inputNewNum == false) {
-                                executeCalculation();
-                            }
-
-
+                        if((currentOperation != null) && !(inputNewNum))
+                            executeCalculation();
 
                         // We use casework here and in the implementation of executeCalculation()
                         // because the functions are essentially the same aside from the operation
-                        if (operationButton.getText().equals(getString(R.string.plus_label))) {
+                        if(operationButton.getText().equals(getString(R.string.plus_label))){
                             currentOperation = Operation.ADDITION;
-                        } else if (operationButton.getText().equals("x")) {
-                            currentOperation = Operation.MULTIPLICATION;
                         }
+                        else if(operationButton.getText().equals("x")){
+                            currentOperation = Operation.MULTIPLICATION;
+                        } else if (operationButton.getText().equals("-")) {
+                            currentOperation = Operation.SUBTRACTION;
+                        } else if (operationButton.getText().equals("/")) {
+                            currentOperation = Operation.DIVISION;
+                        } else if (operationButton.getText().equals("C")) {
+                            currentOperation = Operation.CLEAR;
+                        }
+
                         inputNewNum = true;
-
-
-                        // TODO There's a slight bug here when "chaining" operations. Can you fix it?
-                        // It might help to modify where inputNewNum and currentOperation are set/used...
 
                     }
                 });
             }
+        }
+
+
 
     }
 
@@ -142,28 +154,32 @@ public class MainActivity extends AppCompatActivity {
         double currentNum = Double.parseDouble((String) mainDisplay.getText());
         double result = 0;
 
-
-            switch (currentOperation){
-                case ADDITION:
-                    result = previousNumber + currentNum;
-                    break;
-                case MULTIPLICATION:
-                    result = previousNumber * currentNum;
-                    break;
-            }
-
-
+        switch (currentOperation){
+            case ADDITION:
+                result = previousNumber + currentNum;
+                break;
+            case MULTIPLICATION:
+                result = previousNumber * currentNum;
+                break;
+            case SUBTRACTION:
+                result = previousNumber - currentNum;
+                break;
+            case DIVISION:
+                result = previousNumber / currentNum;
+                break;
+            case CLEAR:
+                result = Double.parseDouble("0");
+                break;
+        }
 
         mainDisplay.setText(formatNumber(result));
 
         previousNumber = result;
 
-        // TODO You might have to add something here to fix the chaining bug mentioned before
-
     }
 
     // TODO Implement this as you see fit
-    /** Formats numbers into scientific nota    ```tion or truncates them
+    /** Formats numbers into scientific notation or truncates them
      *  if they are too long, removes leading zeroes, unnecessary decimal places, etc.
      * @param num
      * @return num formatted as a readable and parsable string
