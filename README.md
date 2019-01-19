@@ -1,4 +1,4 @@
-# Calculator App
+# Calculator App [![Build Status](https://travis-ci.org/spencerng/CalculatorApp.svg?branch=master)](https://travis-ci.org/spencerng/CalculatorApp)
 
 Simple calculator to teach the basics of Android app development and working with a preexisting codebase through a project-based approach.
 
